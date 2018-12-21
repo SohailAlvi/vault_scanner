@@ -7,14 +7,17 @@ import urllib
 
 
 def image_download(url , name):
-    r = requests.get(url, stream = True, headers = {'User-agent': 'Mozilla/5.0'})
-    if r.status_code == 200:
-        with open(name + '.png', 'wb') as f:
-            r.raw.decode_content = True
-            shutil.copyfileobj(r.raw, f)
-            print(url + ' [Downloaded]')
-    else:
-        print('Download for ' + name + ' Failed.')
+    try:
+        r = requests.get(url, stream = True, headers = {'User-agent': 'Mozilla/5.0'})
+        if r.status_code == 200:
+            with open(name + '.png', 'wb') as f:
+                r.raw.decode_content = True
+                shutil.copyfileobj(r.raw, f)
+                print(url + ' [Downloaded]')
+        else:
+            print('Download for ' + name + ' Failed.')
+    except Exception as e:
+        print(str(e))
 
 
 def create_project_dir(directory):
