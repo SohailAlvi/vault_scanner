@@ -63,16 +63,23 @@ class Spider:
         except urllib.error.URLError as e:
             print("Exception Occured!!!\n" + str(e))
             return ''
+        
+        except Exception as e:
+            print(str(e))
 
 
     @staticmethod
     def add_links_to_queue(links):
-        for url in links:
-            if (url in Spider.queue) or (url in Spider.crawled):
-                continue
-            if Spider.domain_name != imu.get_domain_name(url):
-                continue
-            Spider.queue.add(url)
+        try:
+            for url in links:
+                if (url in Spider.queue) or (url in Spider.crawled):
+                    continue
+                if Spider.domain_name != imu.get_domain_name(url):
+                    continue
+                Spider.queue.add(url)
+        
+        except Exception as e:
+            print(str(e))
 
 
     @staticmethod
