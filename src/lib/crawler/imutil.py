@@ -4,20 +4,21 @@ import requests
 import shutil
 import os
 import urllib
+import threading
+
+lock = threading.Lock()
 
 
 def image_download(url , name):
     try:
         r = requests.get(url, stream = True, headers = {'User-agent': 'Mozilla/5.0'})
-        if r.status_code == 200:
-            with open(name + '.png', 'wb') as f:
-                r.raw.decode_content = True
-                shutil.copyfileobj(r.raw, f)
-                print(url + ' [Downloaded]')
-        else:
-            print('Download for ' + name + ' Failed.')
+        with open(name + '.jpeg', 'wb') as f:
+            r.raw.decode_content = True
+            shutil.copyfileobj(r.raw, f)
+            print(url + ' [Downloaded]')
     except Exception as e:
         print(str(e))
+        print('Download for ' + name + ' Failed.')
 
 
 def create_project_dir(directory):
@@ -45,7 +46,7 @@ def file_to_set(file_name):
     with open(file_name, 'rt') as f:
         for line in f:
             results.add(line.replace('\n', ''))
-    return results
+        return results
 
 
 def set_to_file(links, file_name):

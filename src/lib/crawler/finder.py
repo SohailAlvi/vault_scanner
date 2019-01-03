@@ -5,6 +5,7 @@ import urllib.request
 import urllib.response
 import urllib.parse
 import urllib.error
+import colors
 
 
 class Linkfinder(HTMLParser):
@@ -57,10 +58,9 @@ class Imagefinder(HTMLParser):
                 self.feed(html_string)
 
         except urllib.error.URLError as e:
-            print("Was not able to open the URL.")
-            print(str(e.reason))
+            colors.error("Was not able to open the URL.")
         except Exception as e:
-            print(str(e))
+            colors.error(str(e))
         return ''
 
 
@@ -74,10 +74,10 @@ def initiate(list_url, path):
             for i in I.img_links_obtained():
                 imu.image_download(i, path + '/'+str(c))
                 c = c+1
-        print('[X]Returning..')
+        colors.success('Returning..')
 
     except ImportError as e:
-        print('Could not import the required module')
+        colors.error('Could not import the required module')
 
     except Exception as e:
-        print(str(e))
+        colors.error(str(e))

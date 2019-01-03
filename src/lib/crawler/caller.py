@@ -4,7 +4,8 @@ import threading
 from queue import Queue
 from . import imutil as imu
 from .spider import Spider
-
+import colors
+import time
 
 class Crawler:
 
@@ -22,15 +23,16 @@ class Crawler:
 #    def __init__(self, project_name, base_url, domain_name, path_queue, path_crawl):
 
     def create_spider(self):
-        for _ in range(0,1000):
+        for _ in range(0,7):
             t = threading.Thread(target = self.work)
             t.daemon = True
             t.start()
 
     def work(self):
-        url = self.queue.get()
-        Spider.crawl_page(threading.current_thread().name, url)
-        self.queue.task_done()
+        while True:
+                url = self.queue.get()
+                Spider.crawl_page(threading.current_thread().name, url)
+                self.queue.task_done()
 
     def create_jobs(self):
         for link in imu.file_to_set(self.path_queue):
@@ -45,10 +47,16 @@ class Crawler:
             self.create_jobs()
 
     def start(self, return_set:bool):
-        self.create_spider()
-        self.start_crawl()
-        print('[x]Crawling Complete.')
-        if return_set == True:
-            return imu.file_to_set(self.path_crawl),self.pname
-        else:
-            return ''
+        try:
+            colors.info('Crawling Started, Press CTRL+C to stop the process of crawling')
+            t1 = time.time()
+            self.create_spider()
+            self.start_crawl()
+            colors.success('Crawling Complete.')
+            if return_set == True:
+                return imu.file_to_set(self.path_crawl),self.pname
+            else:
+                return ''
+        except KeyboardInterrupt:
+            t2 = time.time()
+            colors.success('Crawling Stopped.\n'+'Time Taken:{}'.format(t2-t1))
