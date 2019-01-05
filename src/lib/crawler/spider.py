@@ -71,6 +71,9 @@ class Spider:
 
         except UnicodeDecodeError:
             return None
+            
+        except IncompleteRead:
+            return None
         
         except Exception as e:
             colors.error(str(e))
